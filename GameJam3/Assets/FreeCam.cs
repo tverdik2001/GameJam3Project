@@ -20,11 +20,13 @@ public class FreeCam : MonoBehaviour
 
     public static float timeSpeed = 0;
     public GameObject shot;
+    public GameObject shotPosition;
+    public Animator cannonAnimation;
 
     void Start()
     {
         StartLooking();
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
     }
 
     void Update()
@@ -32,20 +34,30 @@ public class FreeCam : MonoBehaviour
         if (looking)
         {
             float newRotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * freeLookSensitivity;
-            float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;            
+            float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;
+            //Debug.Log(newRotationY);
             transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
-            timeSpeed = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));        
-            Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);
+            //timeSpeed = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));        
+            //Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);           
+          
         }
 
         if (Input.GetMouseButtonDown(0))
         {
             GameObject currentShot = Instantiate<GameObject>(shot);
-            currentShot.transform.position = transform.position;
-            currentShot.transform.rotation = transform.rotation;
-            currentShot.transform.Translate(0, -0.5f, -2f);
+            currentShot.transform.parent = shotPosition.transform;
+            currentShot.transform.localPosition = Vector3.zero;
+            currentShot.transform.localRotation = Quaternion.identity;
+            currentShot.transform.parent = null;
+            //currentShot.transform.Translate(0, -0.5f, -2f);
+            currentShot.transform.Rotate(0, 0, 90);
+            cannonAnimation.SetBool("shoot", true);
             Destroy(currentShot, 20);
         }
+        else
+            cannonAnimation.SetBool("shoot", false);
+
+
 
 
         //if (Input.GetKeyDown(KeyCode.Mouse1))
