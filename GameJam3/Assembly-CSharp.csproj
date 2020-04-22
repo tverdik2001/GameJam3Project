@@ -66,6 +66,7 @@
     <Compile Include="Assets\EnemyMovement.cs" />
     <Compile Include="Assets\EnemySpawner.cs" />
     <Compile Include="Assets\FreeCam.cs" />
+    <Compile Include="Assets\PlayerMovement.cs" />
     <Compile Include="Assets\ShotMovement.cs" />
     <Compile Include="Assets\SpaceSkies Free\Demo\Scripts\LookCamera.cs" />
     <Compile Include="Assets\SpaceSkies Free\Demo\Scripts\SkyboxChanger.cs" />

@@ -9,70 +9,109 @@ public class FreeCam : MonoBehaviour
         /// <summary>
         /// Sensitivity for free look.
         /// </summary>
-        public float freeLookSensitivity = 100f;
+        public float freeLookSensitivity = 3f;
 
-        float xRotation = 0f;
-
-        public Transform playerBody;
+       
 
         /// <summary>
         /// Set to true when free looking (on right mouse button).
         /// </summary>
     private bool looking = true;
 
-    public static float timeSpeed = 0f;
+    public static float timeSpeed = 0;
     public GameObject shot;
     public GameObject shotPosition;
     public Animator cannonAnimation;
+    private WaitForSeconds shotDuration = new WaitForSeconds(.07f);
 
-   
+    private float nextFire; 
+    private LineRenderer laserLine;
+    public float fireRate = .25f;
+    public float weaponRange = 50f;
+
 
     void Start()
     {
         StartLooking();
-
-        Time.timeScale = 1;
+        laserLine = GetComponent<LineRenderer>();
+        //Time.timeScale = 0;
     }
 
     void Update()
     {
         if (looking)
         {
-
-            float newRotationX = Input.GetAxis("Mouse X") * freeLookSensitivity * Time.deltaTime;
-            float newRotationY = Input.GetAxis("Mouse Y") * freeLookSensitivity * Time.deltaTime;
-            xRotation -= newRotationY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
-            playerBody.Rotate(Vector3.up * newRotationX);
-
-
-            //Time
-            
-           timeSpeed = Mathf.Abs(Input.GetAxis("Moue X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));
-
-            //enemies wont die unless time > 0 so I added this
-            if(timeSpeed<=0)
-            {
-                timeSpeed = .2f;
-            }
-            Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);
-
+            float newRotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * freeLookSensitivity;
+            float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;
+            //Debug.Log(newRotationY);
+            transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
+            //timeSpeed = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));        
+            //Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);           
+          
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject currentShot = Instantiate<GameObject>(shot);
 
-            currentShot.transform.position = transform.position;
-            currentShot.transform.rotation = transform.rotation;
-            currentShot.transform.Translate(0, 0f, -2f);
+            //create ray from camera to mousePosition
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            Destroy(currentShot, 20);
+            //Create bullet from the prefab
+            ShotMovement newBullet = Instantiate(shot).GetComponent<ShotMovement>();
+
+            //Make the new bullet start at camera
+            //newBullet.transform.position = Camera.main.transform.position;
+            newBullet.transform.position = shotPosition.transform.position;
+
+            //set bullet direction
+            newBullet.SetDirection(ray.direction);
+
         }
-        else
-            cannonAnimation.SetBool("shoot", false);
+
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    laserLine.enabled = true;
+        //    GameObject currentShot = Instantiate<GameObject>(shot);
+        //    currentShot.transform.parent = shotPosition.transform;
+        //    currentShot.transform.localPosition = Vector3.zero;
+        //    currentShot.transform.localRotation = Quaternion.identity;
+        //    currentShot.transform.parent = null;
+        //    //currentShot.transform.Translate(0, -0.5f, -2f);
+        //    currentShot.transform.Rotate(90,0 , 0);
+        //    cannonAnimation.SetBool("shoot", true);
+        //    Destroy(currentShot, 20);
+        //}
+        //else
+        //    cannonAnimation.SetBool("shoot", false);
+
+        //if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+        //{
+
+        //    nextFire = Time.time + fireRate;
+        //    StartCoroutine(ShotEffect());
+        //    Vector3 rayOrigin = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        //    RaycastHit hit;
+        //    laserLine.SetPosition(0, shotPosition.transform.position);
+        //    laserLine.enabled = true;
+        //    GameObject currentShot = Instantiate<GameObject>(shot);
+        //    currentShot.transform.parent = shotPosition.transform;
+        //    currentShot.transform.localPosition = Vector3.zero;
+        //    //currentShot.transform.localRotation = Quaternion.identity;
+        //    currentShot.transform.parent = null;
+        //    currentShot.transform.LookAt(Camera.main.transform.forward);
+        //    //currentShot.transform.Translate(0, -0.5f, -2f);
+        //    //currentShot.transform.Rotate(90, 0, 0);
+        //    cannonAnimation.SetBool("shoot", true);
+        //    Destroy(currentShot, 20);
+        //    //if (Physics.Raycast(rayOrigin, Camera.main.transform.forward, out hit, weaponRange))
+        //    //{
+        //    //    laserLine.SetPosition(1, hit.point);
+        //    //}
+        //    //else
+        //    //{
+        //    //    laserLine.SetPosition(1, Camera.main.transform.forward * weaponRange);
+        //    //}
+        //}
 
 
 
@@ -87,7 +126,26 @@ public class FreeCam : MonoBehaviour
         //}
     }
 
-        void OnDisable()
+    private IEnumerator ShotEffect()
+    {
+        //    laserLine.enabled = true;
+            //    GameObject currentShot = Instantiate<GameObject>(shot);
+            //    currentShot.transform.parent = shotPosition.transform;
+            //    currentShot.transform.localPosition = Vector3.zero;
+            //    currentShot.transform.localRotation = Quaternion.identity;
+            //    currentShot.transform.parent = null;
+            //    //currentShot.transform.Translate(0, -0.5f, -2f);
+            //    currentShot.transform.Rotate(90,0 , 0);
+            //    cannonAnimation.SetBool("shoot", true);
+            //    Destroy(currentShot, 20);
+        laserLine.enabled = true;
+        yield return shotDuration;
+        laserLine.enabled = false;
+
+
+    }
+
+    void OnDisable()
         {
             StopLooking();
         }

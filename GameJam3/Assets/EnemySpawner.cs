@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour
     void Update()
     {
         if (FreeCam.timeSpeed > 0)
-        if (Random.Range(0,30) < 5)
+        if (Random.Range(0,100) < 5)
         {
             GameObject current = Instantiate<GameObject>(enemy);
             current.transform.position = new Vector3(transform.position.x + Random.Range(-10, 10), transform.position.y, transform.position.z);
