@@ -1,0 +1,17 @@
+﻿<Properties StartupConfiguration="{FBDC4CE8-717F-1837-B608-2AF398B01327}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/FreeCam.cs">
+    <Files>
+      <File FileName="Assets/FreeCam.cs" Line="51" Column="63" />
+      <File FileName="Assets/PlayerMovement.cs" Line="50" Column="10" />
+      <File FileName="Assets/EnemySpawner.cs" Line="20" Column="30" />
+      <File FileName="Assets/ShotMovement.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="84262bae-9782-4166-9cad-dd89f187a9c0" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

@@ -9,49 +9,66 @@ public class FreeCam : MonoBehaviour
         /// <summary>
         /// Sensitivity for free look.
         /// </summary>
-        public float freeLookSensitivity = 3f;
+        public float freeLookSensitivity = 100f;
 
-       
+        float xRotation = 0f;
+
+        public Transform playerBody;
 
         /// <summary>
         /// Set to true when free looking (on right mouse button).
         /// </summary>
     private bool looking = true;
 
-    public static float timeSpeed = 0;
+    public static float timeSpeed = 0f;
     public GameObject shot;
     public GameObject shotPosition;
     public Animator cannonAnimation;
 
+   
+
     void Start()
     {
         StartLooking();
-        //Time.timeScale = 0;
+
+        Time.timeScale = 1;
     }
 
     void Update()
     {
         if (looking)
         {
-            float newRotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * freeLookSensitivity;
-            float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;
-            //Debug.Log(newRotationY);
-            transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
-            //timeSpeed = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));        
-            //Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);           
-          
+
+            float newRotationX = Input.GetAxis("Mouse X") * freeLookSensitivity * Time.deltaTime;
+            float newRotationY = Input.GetAxis("Mouse Y") * freeLookSensitivity * Time.deltaTime;
+            xRotation -= newRotationY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+            playerBody.Rotate(Vector3.up * newRotationX);
+
+
+            //Time
+            
+           timeSpeed = Mathf.Abs(Input.GetAxis("Moue X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));
+
+            //enemies wont die unless time > 0 so I added this
+            if(timeSpeed<=0)
+            {
+                timeSpeed = .2f;
+            }
+            Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);
+
         }
 
         if (Input.GetMouseButtonDown(0))
         {
             GameObject currentShot = Instantiate<GameObject>(shot);
-            currentShot.transform.parent = shotPosition.transform;
-            currentShot.transform.localPosition = Vector3.zero;
-            currentShot.transform.localRotation = Quaternion.identity;
-            currentShot.transform.parent = null;
-            //currentShot.transform.Translate(0, -0.5f, -2f);
-            currentShot.transform.Rotate(0, 0, 90);
-            cannonAnimation.SetBool("shoot", true);
+
+            currentShot.transform.position = transform.position;
+            currentShot.transform.rotation = transform.rotation;
+            currentShot.transform.Translate(0, 0f, -2f);
+
             Destroy(currentShot, 20);
         }
         else
