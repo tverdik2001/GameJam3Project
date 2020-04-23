@@ -9,9 +9,9 @@ public class FreeCam : MonoBehaviour
         /// <summary>
         /// Sensitivity for free look.
         /// </summary>
-        public float freeLookSensitivity = 3f;
-
-       
+        public float freeLookSensitivity = 100f;
+        public Transform playerBody;
+        private float xRotation = 0f;
 
         /// <summary>
         /// Set to true when free looking (on right mouse button).
@@ -41,13 +41,27 @@ public class FreeCam : MonoBehaviour
     {
         if (looking)
         {
-            float newRotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * freeLookSensitivity;
-            float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;
-            //Debug.Log(newRotationY);
-            transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
+            //float newRotationX = Input.GetAxis("Mouse X") * freeLookSensitivity * Time.deltaTime;
+            //float newRotationY = Input.GetAxis("Mouse Y") * freeLookSensitivity * Time.deltaTime;
+            //playerBody.Rotate(Vector3.right * mouseY);
+
+            //playerBody.Rotate(Vector3.up * mouseX);
+            
+            float newRotationX = Input.GetAxis("Mouse X") * freeLookSensitivity;
+            float newRotationY = playerBody.localEulerAngles.x + Input.GetAxis("Mouse Y") * freeLookSensitivity;
+            xRotation -= newRotationY;
+            xRotation = Mathf.Clamp(xRotation, -11f, 32f);
+            
+            //transform.localEulerAngles = new Vector3(newRotationY, 0f, 0f);
+            //newRotationY = Mathf.Clamp(newRotationY, -1f, 1f);
+            Debug.Log(xRotation);
+            playerBody.Rotate(Vector3.up * newRotationX);
+            transform.localRotation = Quaternion.Euler(xRotation, -90f, 0f);
+            //transform.Rotate(Vector3.left * newRotationY);
+            //playerBody.Rotate(Vector3.left * newRotationY);
             //timeSpeed = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));        
             //Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);           
-          
+
         }
 
         if (Input.GetMouseButtonDown(0))
