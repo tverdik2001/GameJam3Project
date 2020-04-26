@@ -71,7 +71,7 @@ public class FreeCam : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             //Create bullet from the prefab
-            ShotMovement newBullet = Instantiate(shot).GetComponent<ShotMovement>();
+              ShotMovement newBullet = Instantiate(shot).GetComponent<ShotMovement>();
 
             //Make the new bullet start at camera
             //newBullet.transform.position = Camera.main.transform.position;
