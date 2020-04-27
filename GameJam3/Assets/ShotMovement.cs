@@ -8,6 +8,8 @@ public class ShotMovement : MonoBehaviour
     public float bulletForce;
     bool firstTime = false;
     Vector3 direction;
+    public GameObject hitEffect;
+    public GameObject destroyEffect;
 
     // Use this for initialization
     void Start()
@@ -25,13 +27,10 @@ public class ShotMovement : MonoBehaviour
         firstTime = true;
     }
 
-    void OnCollisionEnter()
-    {
-        //code for when bullet hits something
-    }
 
     void FixedUpdate()
     {
+       
         if (firstTime)
         {
           
@@ -62,12 +61,40 @@ public class ShotMovement : MonoBehaviour
     //    transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
     //}
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Enemy"))
-    //    {
-    //        Destroy(collision.gameObject);
-    //    }
-    //    Destroy(this.gameObject);
-    //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name.Contains("shoot")) return;
+
+        if (collision.gameObject.tag.Contains("Enemy"))
+        {
+            GameObject current = collision.gameObject;
+            while (current.tag != "Enemy")
+            {
+                current = current.transform.parent.gameObject;
+            }
+            EnemyMovement enemy = current.GetComponent<EnemyMovement>();
+            Debug.Log(enemy.HP);
+            enemy.HP -= Random.Range(20, 60);
+            if (enemy.HP <= 0)
+            {
+                GameObject destroy = Instantiate<GameObject>(destroyEffect);
+                destroy.transform.position = current.transform.position;
+                Destroy(destroy, 4);
+                Destroy(enemy.gameObject);
+            }
+        }
+
+        GameObject hit = Instantiate<GameObject>(hitEffect);
+        hit.transform.position = transform.position;
+        Destroy(hit, 4);
+
+        Destroy(gameObject);
+
+        //  if (collision.gameObject.CompareTag("Enemy"))
+        //{
+        //    Destroy(collision.gameObject);
+        //}
+        //Destroy(this.gameObject);
+        Debug.Log("hit");
+    }
 }
