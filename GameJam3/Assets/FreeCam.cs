@@ -39,6 +39,8 @@ public class FreeCam : MonoBehaviour
         //Time.timeScale = 0;
     }
 
+    bool isTimeAnomaly = false;
+
     void Update()
     {
         if (looking)
@@ -53,8 +55,17 @@ public class FreeCam : MonoBehaviour
             float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;
             //Debug.Log(newRotationY);
             transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
-            //timeSpeed = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));        
-            //Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);           
+
+            if (Random.Range(0, 100) == 1)
+            {
+                isTimeAnomaly = !isTimeAnomaly;                
+            }
+
+            if (isTimeAnomaly)
+                timeSpeed = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y"));
+            else
+                timeSpeed = 1;
+            Time.timeScale = Mathf.Lerp(Time.timeScale, timeSpeed, 5);           
 
             //float newRotationX = Input.GetAxis("Mouse X") * freeLookSensitivity * Time.deltaTime;
             //float newRotationY = Input.GetAxis("Mouse Y") * freeLookSensitivity * Time.deltaTime;

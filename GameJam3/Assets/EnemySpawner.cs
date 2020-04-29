@@ -14,14 +14,14 @@ public class EnemySpawner : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (FreeCam.timeSpeed > 0)
-        if (Random.Range(0,100) < 5)
+        if (Random.Range(0,1000) < 1)
         {
             GameObject current = Instantiate<GameObject>(enemy);
-            current.transform.position = new Vector3(transform.position.x + Random.Range(-10, 10), transform.position.y, transform.position.z);
-            Destroy(current, 20);
+            current.transform.position = new Vector3(transform.position.x + Random.Range(-100, 100), transform.position.y + Random.Range(-100, 100), transform.position.z + Random.Range(-100, 100));
+            //Destroy(current, 20);
         }
 
     }
